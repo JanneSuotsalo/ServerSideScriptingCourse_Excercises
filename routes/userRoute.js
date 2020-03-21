@@ -10,6 +10,7 @@ router.get("/:id", userController.user_get);
 
 router.post("/", (req, res) => {
   res.send("With this endpoint you can add users.");
+  console.log(req.body);
 });
 
 router.put("/", (req, res) => {
