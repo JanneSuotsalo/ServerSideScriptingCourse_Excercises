@@ -1,6 +1,10 @@
 "use strict";
 const passport = require("passport");
 const Strategy = require("passport-local").Strategy;
+const passportJWT = require("passport-jwt");
+const JWTStrategy = passportJWT.Strategy;
+const ExtractJWT = passportJWT.ExtractJwt;
+const userModel = require("../models/userModel");
 
 // fake database: ****************
 const users = [
@@ -30,10 +34,7 @@ const getUser = id => {
 };
 
 const getUserLogin = email => {
-  console.log("email is: " + email);
   const user = users.filter(usr => {
-    console.log(usr.email);
-    console.log(email);
     if (usr.email === email) {
       console.log("user is: " + usr.name);
       return usr;
@@ -74,6 +75,19 @@ passport.use(
       return done(err);
     }
   })
+);
+
+passport.use(
+  new JWTStrategy(
+    {
+      jwtFromRequest: ExtractJWT.fromAuthHeaderAsBearerToken(),
+      secretOrKey: "your_jwt_secret"
+    },
+    (jwtPayload, done) => {
+      done(null, userModel.getUser(jwtPayload.user_id));
+      return userModel.getUser(jwtPayload.user_id);
+    }
+  )
 );
 
 module.exports = passport;

@@ -14,6 +14,16 @@ const users = [
   }
 ];
 
+const getUser = id => {
+  const user = users.filter(usr => {
+    if (usr.user_id === id) {
+      return usr;
+    }
+  });
+  return user[0];
+};
+
 module.exports = {
-  users
+  users,
+  getUser
 };
