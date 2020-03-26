@@ -3,6 +3,7 @@ require("dotenv").config();
 
 const express = require("express");
 const db = require("./model/db");
+const cat = require("./model/cat");
 const cors = require("cors");
 const passport = require("./utils/pass");
 const app = express();
@@ -35,6 +36,17 @@ app.use(passport.session());
     res.redirect("/secret");
   }
 );*/
+
+app.get("/", async (req, res) => {
+  console.log("someone visited my url");
+  res.send(await cat.find());
+});
+
+// temp
+app.post("/catCreate", async (req, res) => {
+  const mycat = await cat.create({ name: "kitty", age: 12 });
+  res.send("cat created with id: " + mycat._id);
+});
 
 app.get("/secret", loggedIn, (req, res) => {
   res.render("secret");
